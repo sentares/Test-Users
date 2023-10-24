@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const URL = process.env.REACT_APP_API_HOST
+const URL = 'https://653670f1bb226bb85dd21f13.mockapi.io/TestUsers'
 
 export const $api = axios.create({
 	baseURL: URL,
