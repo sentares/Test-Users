@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { IUser } from '../interface/userType'
-import { UserService } from '../model/UserService/UserService'
 import cls from './UserCard.module.css'
 
 interface UserCardProps {
@@ -9,12 +8,17 @@ interface UserCardProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({ user, handleClickDelete }) => {
-	// function handleClickDelete(id: string) {}
-
 	return (
 		<div className={cls.UserCard}>
-			<div>{user.name}</div>
-			<button onClick={handleClickDelete.bind(null, user.id)}>
+			<img src={user.avatar} alt='avatar' className={cls.avatar} />
+			<h1>
+				{user.name} {user.lastName}
+			</h1>
+			<div>{user.email}</div>
+			<button
+				onClick={handleClickDelete.bind(null, user.id)}
+				className={cls.deleteButton}
+			>
 				Delete User
 			</button>
 		</div>

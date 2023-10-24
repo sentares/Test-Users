@@ -1,7 +1,10 @@
 import { IUser, UserCard, UserService } from 'enteties/user'
 import { CreateUserDto } from 'enteties/user/interface/userType'
-import { useEffect, useState } from 'react'
+import SearchUser from 'features/search/tsx/SearchUser'
+import debounce from 'lodash.debounce'
+import { useCallback, useEffect, useState } from 'react'
 import { CreateUserModal } from 'shared/modal'
+import ActionWithUser from 'widgets/action/ActionWithUser'
 
 function App() {
 	const [usersArr, setUsersArr] = useState<[] | IUser[]>([])
@@ -37,30 +40,39 @@ function App() {
 		;(async () => setUsersArr(await getUsers()))()
 	}, [])
 
+	const callSearch = useCallback(
+		debounce(str => {
+			;(async () => setUsersArr(await getUsers(str)))()
+		}, 700),
+		[]
+	)
+
 	return (
 		<div className='App'>
-			{isLoading ? (
-				<div className='loading'>Loading...</div>
-			) : (
-				<>
-					{openModal && (
-						<CreateUserModal
-							changeStateModal={changeStateModal}
-							handleCreate={handleCreate}
-						/>
-					)}
-					<button onClick={changeStateModal}>Create User</button>
-
-					{usersArr?.length &&
-						usersArr.map(user => (
-							<UserCard
-								key={user.id}
-								user={user}
-								handleClickDelete={handleClickDelete}
-							/>
-						))}
-				</>
+			{openModal && (
+				<CreateUserModal
+					changeStateModal={changeStateModal}
+					handleCreate={handleCreate}
+				/>
 			)}
+
+			<div className='actioinsBlock'>
+				<ActionWithUser callSearch={callSearch} />
+				<button onClick={changeStateModal} className='createUser'>
+					Create User
+				</button>
+			</div>
+
+			<div className='usersList'>
+				{usersArr?.length &&
+					usersArr.map(user => (
+						<UserCard
+							key={user.id}
+							user={user}
+							handleClickDelete={handleClickDelete}
+						/>
+					))}
+			</div>
 		</div>
 	)
 }

@@ -1,3 +1,24 @@
 .UserCard {
-	background: red;
+	display: flex;
+	align-items: start;
+	flex-direction: column;
+	justify-content: start;
+	max-width: 220px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid gray;
+	gap: 4px;
+}
+
+.avatar {
+	max-width: 120px;
+	max-height: 120px;
+}
+
+.deleteButton {
+	width: 100%;
+	&:hover {
+		background: #b91c1c;
+		color: #fff;
+	}
 }

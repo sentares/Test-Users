@@ -4,25 +4,46 @@ import { $api } from 'shared/api/api'
 import { convertFileToString } from 'shared/lib/ConvertToString'
 
 interface IUserService {
-	getUsers: () => Promise<IUser[]>
+	getUsers: (str?: string) => Promise<IUser[]>
 	deleteUser: (id: string) => Promise<void>
 	postUser: (data: CreateUserDto) => Promise<IUser>
+	getUsersByName: (str: string) => Promise<any>
 	isLoading: boolean
 }
 
 export function UserService(): IUserService {
 	const [isLoading, setIsLoading] = useState(false)
 
-	const getUsers = async () => {
+	const getUsers = async (str?: string) => {
 		try {
 			setIsLoading(true)
 
-			const response = await $api.get('/users')
+			let url = '/users'
+			if (str) {
+				const capitalizedStr = str.charAt(0).toUpperCase() + str.slice(1)
+				url += `?name=${capitalizedStr}`
+			}
+
+			const response = await $api.get(url)
 
 			setIsLoading(false)
 			return response.data
 		} catch (e) {
 			console.error(e)
+		}
+	}
+
+	const getUsersByName = async (str: string) => {
+		try {
+			setIsLoading(true)
+
+			const response = await $api.get(`/users?name=${str}`)
+			setIsLoading(false)
+			console.log(response.data)
+
+			return response.data
+		} catch (e) {
+			console.log(e)
 		}
 	}
 
@@ -53,5 +74,5 @@ export function UserService(): IUserService {
 		}
 	}
 
-	return { getUsers, deleteUser, postUser, isLoading }
+	return { getUsers, deleteUser, postUser, getUsersByName, isLoading }
 }

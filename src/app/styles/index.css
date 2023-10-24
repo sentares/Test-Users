@@ -16,6 +16,10 @@ code {
 
 button {
 	cursor: pointer;
+	transition: all 0.3s;
+	&:hover {
+		scale: 1.04;
+	}
 }
 
 input,
@@ -23,6 +27,7 @@ button {
 	border-radius: 8px;
 	border: none;
 	padding: 8px 12px;
+	outline: none;
 }
 
 .App {
@@ -36,4 +41,21 @@ button {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+
+.usersList {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 20px;
+}
+
+.actioinsBlock {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	padding: 10px;
+}
+
+.createUser {
+	max-width: 200px;
 }

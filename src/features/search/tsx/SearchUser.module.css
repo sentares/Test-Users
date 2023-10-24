@@ -1,0 +1,15 @@
+.searchUser {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	border: 1px solid gray;
+	border-radius: 8px;
+	max-width: 300px;
+	padding-left: 8px;
+	background: #cffafe;
+}
+
+.searchInput {
+	width: 100%;
+	background: none;
+}
