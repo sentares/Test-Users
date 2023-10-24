@@ -6,6 +6,7 @@ import debounce from 'lodash.debounce'
 import { useCallback, useEffect, useState } from 'react'
 import { CreateUserModal } from 'shared/modal'
 import ActionWithUser from 'widgets/action/ActionWithUser'
+import LoadingModal from 'widgets/modal/LoadingModal'
 
 function App() {
 	const [usersArr, setUsersArr] = useState<[] | IUser[]>([])
@@ -47,7 +48,7 @@ function App() {
 		debounce(str => {
 			;(async () => setUsersArr(await getUsers(str, objSort)))()
 			setSearchStr(str)
-		}, 700),
+		}, 500),
 		[]
 	)
 
@@ -58,6 +59,8 @@ function App() {
 
 	return (
 		<div className='App'>
+			{isLoading && <LoadingModal />}
+
 			{openModal && (
 				<CreateUserModal
 					changeStateModal={changeStateModal}
@@ -74,7 +77,7 @@ function App() {
 
 			<div className='usersList'>
 				{usersArr?.length &&
-					!isLoading &&
+					// !isLoading &&
 					usersArr.map(user => (
 						<UserCard
 							key={user.id}

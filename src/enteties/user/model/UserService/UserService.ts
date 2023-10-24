@@ -16,7 +16,7 @@ export function UserService(): IUserService {
 
 	const getUsers = async (str?: string, obj?: ISort) => {
 		try {
-			setIsLoading(true)
+			// setIsLoading(true)
 
 			let url = '/users'
 
@@ -26,7 +26,7 @@ export function UserService(): IUserService {
 
 			if (obj) {
 				const sortDirection = obj.sortProperty.replace('-', '')
-				const orderBy = obj.sortProperty.includes('-') ? 'desc' : 'asc'
+				const orderBy = obj.sortProperty.includes('-') ? 'asc' : 'desc'
 
 				if (str) {
 					url += '&'
@@ -38,7 +38,7 @@ export function UserService(): IUserService {
 			}
 
 			const response = await $api.get(url)
-			setIsLoading(false)
+			// setIsLoading(false)
 
 			return response.data
 		} catch (e) {
