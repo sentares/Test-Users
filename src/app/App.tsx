@@ -1,5 +1,6 @@
 import { IUser, UserCard, UserService } from 'enteties/user'
 import { CreateUserDto } from 'enteties/user/interface/userType'
+import { ISort } from 'features/filter/tsx/Filter'
 import SearchUser from 'features/search/tsx/SearchUser'
 import debounce from 'lodash.debounce'
 import { useCallback, useEffect, useState } from 'react'
@@ -9,6 +10,8 @@ import ActionWithUser from 'widgets/action/ActionWithUser'
 function App() {
 	const [usersArr, setUsersArr] = useState<[] | IUser[]>([])
 	const [openModal, setOpenModal] = useState(false)
+	const [searchStr, setSearchStr] = useState('')
+	const [objSort, setObjSort] = useState({ name: 'A-z', sortProperty: '-name' })
 
 	function changeStateModal() {
 		setOpenModal(!openModal)
@@ -42,10 +45,16 @@ function App() {
 
 	const callSearch = useCallback(
 		debounce(str => {
-			;(async () => setUsersArr(await getUsers(str)))()
+			;(async () => setUsersArr(await getUsers(str, objSort)))()
+			setSearchStr(str)
 		}, 700),
 		[]
 	)
+
+	const calFilter = (obj: ISort) => {
+		;(async () => setUsersArr(await getUsers(searchStr, obj)))()
+		setObjSort(obj)
+	}
 
 	return (
 		<div className='App'>
@@ -57,7 +66,7 @@ function App() {
 			)}
 
 			<div className='actioinsBlock'>
-				<ActionWithUser callSearch={callSearch} />
+				<ActionWithUser callSearch={callSearch} callFilter={calFilter} />
 				<button onClick={changeStateModal} className='createUser'>
 					Create User
 				</button>
@@ -65,6 +74,7 @@ function App() {
 
 			<div className='usersList'>
 				{usersArr?.length &&
+					!isLoading &&
 					usersArr.map(user => (
 						<UserCard
 							key={user.id}

@@ -1,16 +1,20 @@
+import cls from './Action.module.css'
+
+import Filter, { ISort } from 'features/filter/tsx/Filter'
 import SearchUser from 'features/search/tsx/SearchUser'
-import { Filter } from 'lucide-react'
 
 interface ActionWithUserProps {
 	callSearch: (str: string) => void
+	callFilter: (obj: ISort) => void
 }
 
 const ActionWithUser = (props: ActionWithUserProps) => {
-	const { callSearch } = props
+	const { callSearch, callFilter } = props
+
 	return (
-		<div>
+		<div className={cls.ActionWithUser}>
 			<SearchUser callSearch={callSearch} />
-			<Filter />
+			<Filter callFilter={callFilter} />
 		</div>
 	)
 }

@@ -1,49 +1,48 @@
 import { CreateUserDto, IUser } from 'enteties/user/interface/userType'
+import { ISort } from 'features/filter/tsx/Filter'
 import { useState } from 'react'
 import { $api } from 'shared/api/api'
 import { convertFileToString } from 'shared/lib/ConvertToString'
 
 interface IUserService {
-	getUsers: (str?: string) => Promise<IUser[]>
+	getUsers: (str?: string, obj?: ISort) => Promise<IUser[]>
 	deleteUser: (id: string) => Promise<void>
 	postUser: (data: CreateUserDto) => Promise<IUser>
-	getUsersByName: (str: string) => Promise<any>
 	isLoading: boolean
 }
 
 export function UserService(): IUserService {
 	const [isLoading, setIsLoading] = useState(false)
 
-	const getUsers = async (str?: string) => {
+	const getUsers = async (str?: string, obj?: ISort) => {
 		try {
 			setIsLoading(true)
 
 			let url = '/users'
+
 			if (str) {
-				const capitalizedStr = str.charAt(0).toUpperCase() + str.slice(1)
-				url += `?name=${capitalizedStr}`
+				url += `?name=${encodeURIComponent(str)}`
+			}
+
+			if (obj) {
+				const sortDirection = obj.sortProperty.replace('-', '')
+				const orderBy = obj.sortProperty.includes('-') ? 'desc' : 'asc'
+
+				if (str) {
+					url += '&'
+				} else {
+					url += '?'
+				}
+
+				url += `sortBy=${sortDirection}&order=${orderBy}`
 			}
 
 			const response = await $api.get(url)
-
 			setIsLoading(false)
+
 			return response.data
 		} catch (e) {
 			console.error(e)
-		}
-	}
-
-	const getUsersByName = async (str: string) => {
-		try {
-			setIsLoading(true)
-
-			const response = await $api.get(`/users?name=${str}`)
-			setIsLoading(false)
-			console.log(response.data)
-
-			return response.data
-		} catch (e) {
-			console.log(e)
 		}
 	}
 
@@ -74,5 +73,5 @@ export function UserService(): IUserService {
 		}
 	}
 
-	return { getUsers, deleteUser, postUser, getUsersByName, isLoading }
+	return { getUsers, deleteUser, postUser, isLoading }
 }
